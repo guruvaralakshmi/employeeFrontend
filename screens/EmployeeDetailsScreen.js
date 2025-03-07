@@ -19,8 +19,8 @@ const EmployeeDetailsScreen = ({ route }) => {
 
   // Logout Function with Alert Popup
   const handleLogout = () => {
-    Alert.alert("Logout", "Logout successfully!", [
-      { text: "OK", onPress: () => {
+    Alert.alert("Logout", " Confirm Logout !", [
+      { text: "yes", onPress: () => {
           navigation.reset({
             index: 0,
             routes: [{ name: "Login" }], // Navigate back to Login and reset history
