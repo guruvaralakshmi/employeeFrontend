@@ -17,16 +17,22 @@ const EmployeeDetailsScreen = ({ route }) => {
     });
   }, [navigation]);
 
-  // Logout Function with Alert Popup
+  // Logout Function with Confirmation
   const handleLogout = () => {
-    Alert.alert("Logout", " Confirm Logout !", [
-      { text: "yes", onPress: () => {
+    Alert.alert("Logout", "Confirm Logout?", [
+      {
+        text: "No",
+        style: "cancel", // Keeps the user on the current screen
+      },
+      {
+        text: "Yes",
+        onPress: () => {
           navigation.reset({
             index: 0,
             routes: [{ name: "Login" }], // Navigate back to Login and reset history
           });
-        }
-      }
+        },
+      },
     ]);
   };
 
