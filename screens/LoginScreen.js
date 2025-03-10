@@ -6,7 +6,7 @@ import {
   Button,
   StyleSheet,
   Alert,
-  TouchableOpacity,
+  
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
@@ -22,34 +22,30 @@ const LoginScreen = () => {
     }
   
     try {
-      const response = await fetch("https://employeebackend-5qt6.onrender.com/api/employees/login", {
+      const response = await fetch("http://192.168.0.21:5000/api/employees/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
   
-      const textResponse = await response.text();
-      console.log("Raw Response:", textResponse);
+      const data = await response.json();
+      console.log("Login Response:", data); // ✅ Log response
   
-      try {
-        const data = JSON.parse(textResponse);
-        if (response.ok) {
-          Alert.alert("Success", "Login successful!", [
-            { text: "OK", onPress: () => navigation.navigate("Welcome") },
-          ]);
-        } else {
-          Alert.alert("Error", data.message || "Invalid email or password.");
-        }
-      } catch (jsonError) {
-        console.error("JSON Parsing Error:", jsonError);
-        Alert.alert("Error", "Invalid response from server.");
+      if (response.ok) {
+        Alert.alert("Success", "Login successful!", [
+          { 
+            text: "OK", 
+            onPress: () => navigation.replace("EmployeeDetails", { employeeData: data.employeeData }) 
+          },
+        ]);
+      } else {
+        Alert.alert("Error", data.message || "Invalid email or password.");
       }
     } catch (error) {
       console.error("Login error:", error);
       Alert.alert("Error", "Network error. Check server and internet connection.");
     }
   };
-  
   
   
 
