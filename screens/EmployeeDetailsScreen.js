@@ -34,12 +34,13 @@ const EmployeeDetailsScreen = ({ route }) => {
       <Text style={styles.title}>Employee Details</Text>
       <Image 
         source={employeeData.photo 
-          ? { uri: `http://192.168.0.21:5000/${employeeData.photo}` } 
+          ? { uri: `https://employeebackend-5qt6.onrender.com/${employeeData.photo}` } 
           : defaultProfileImage
         } 
         style={styles.image} 
       />
       <View style={styles.detailsContainer}>
+        <View style={styles.row}><Text style={styles.label}>employeeId:</Text><Text style={styles.value}>{employeeData.employeeId}</Text></View>
         <View style={styles.row}><Text style={styles.label}>Full Name:</Text><Text style={styles.value}>{employeeData.FullName}</Text></View>
         <View style={styles.row}><Text style={styles.label}>Age:</Text><Text style={styles.value}>{employeeData.age}</Text></View>
         <View style={styles.row}><Text style={styles.label}>Gender:</Text><Text style={styles.value}>{employeeData.gender}</Text></View>
