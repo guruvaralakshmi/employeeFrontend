@@ -1,5 +1,14 @@
-import React, { useState, useLayoutEffect } from "react";
-import { View, Text, TextInput, Image, TouchableOpacity, Alert, StyleSheet, ScrollView } from "react-native";
+import React, { useState, useEffect, useLayoutEffect } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  Image,
+  TouchableOpacity,
+  Alert,
+  StyleSheet,
+  ScrollView,
+} from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 
@@ -7,12 +16,30 @@ const defaultProfileImage = require("../assets/placeholder.png");
 
 const EmployeeDetailsScreen = ({ route }) => {
   const navigation = useNavigation();
-  const { employeeData } = route.params || {}; // Logged-in employee data
   const [search, setSearch] = useState("");
   const [searchedEmployee, setSearchedEmployee] = useState(null);
-  const [displayedEmployee, setDisplayedEmployee] = useState(employeeData);
+  const [displayedEmployee, setDisplayedEmployee] = useState(null);
   const [isSearching, setIsSearching] = useState(false);
+  const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    fetchEmployeeData();
+  }, []);
+
+  const fetchEmployeeData = async () => {
+    setLoading(true);
+    try {
+      const storedData = await AsyncStorage.getItem("employeeData");
+      if (storedData) {
+        setDisplayedEmployee(JSON.parse(storedData));
+      } else {
+        setDisplayedEmployee(null);
+      }
+    } catch (error) {
+      console.error("Error fetching employee data:", error);
+    }
+    setLoading(false);
+  };
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
@@ -90,7 +117,7 @@ const EmployeeDetailsScreen = ({ route }) => {
         <Image
           source={
             searchedEmployee?.photo
-              ? { uri: `https://employeebackend-5qt6.onrender.com/${displayedEmployee.photo.replace(/^\/?uploads\//, '')}`}
+              ? { uri: `https://employeebackend-5qt6.onrender.com/${searchedEmployee.photo.replace(/^\/?uploads\//, '')}`}
               : defaultProfileImage
           }
           style={styles.image}
@@ -145,5 +172,4 @@ const styles = StyleSheet.create({
   errorText: { fontSize: 18, color: "red", marginTop: 20 },
   logout: { color: "red", fontSize: 16, marginRight: 10 },
 });
-
 export default EmployeeDetailsScreen;
