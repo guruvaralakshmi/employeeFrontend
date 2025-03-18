@@ -19,10 +19,17 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.guru_varalakshmi.employeeFrontend"
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "7f44e091-8288-4637-accd-c079f65465b4"
+      }
+    },
+    "owner": "guru_varalakshmi"
   }
 }
