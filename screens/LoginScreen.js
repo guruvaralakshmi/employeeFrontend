@@ -2,17 +2,19 @@ import React, { useState } from "react";
 import {
   View,
   Text,
-  TextInput,
-  Button,
-  StyleSheet,
   Alert,
+  StyleSheet,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
+import { TextInput, Button } from "react-native-paper"; // Import Material Design Components
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const navigation = useNavigation();
 
   const handleLogin = async () => {
@@ -29,19 +31,16 @@ const LoginScreen = () => {
       });
 
       const data = await response.json();
-      console.log("Login Response:", data); // Log the full response
+      console.log("Login Response:", data);
 
       if (response.ok) {
-        // Save the token and employee data using the correct key from the API response
         await AsyncStorage.setItem("authToken", data.token);
         await AsyncStorage.setItem("employeeData", JSON.stringify(data.employee));
-        
-        
+
         Alert.alert("Success", "Login successful!", [
           {
             text: "OK",
-            onPress: () =>
-              navigation.replace("EmployeeDetails", { employeeData: data.employee }),
+            onPress: () => navigation.replace("Menu"),
           },
         ]);
       } else {
@@ -54,30 +53,63 @@ const LoginScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Login</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        keyboardType="email-address"
-        autoCapitalize="none"
-        onChangeText={(text) => setEmail(text)}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        secureTextEntry
-        onChangeText={(text) => setPassword(text)}
-      />
-      <Button title="Login" onPress={handleLogin} />
-    </View>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={styles.container}
+    >
+      <View style={styles.card}>
+        <Text style={styles.title}>Login</Text>
+
+        {/* Email Input */}
+        <TextInput
+          label="Email"
+          mode="outlined"
+          value={email}
+          onChangeText={setEmail}
+          keyboardType="email-address"
+          autoCapitalize="none"
+          left={<TextInput.Icon icon="email" />}
+          style={styles.input}
+        />
+
+        {/* Password Input */}
+        <TextInput
+          label="Password"
+          mode="outlined"
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry={!showPassword}
+          autoCapitalize="none"
+          left={<TextInput.Icon icon="lock" />}
+          right={
+            <TextInput.Icon
+              icon={showPassword ? "eye-off" : "eye"}
+              onPress={() => setShowPassword(!showPassword)}
+            />
+          }
+          style={styles.input}
+        />
+
+        {/* Login Button */}
+        <Button mode="contained" onPress={handleLogin} style={styles.loginButton}>
+          Login
+        </Button>
+      </View>
+    </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20, justifyContent: "center" },
-  title: { fontSize: 24, fontWeight: "bold", marginBottom: 20, textAlign: "center" },
-  input: { borderWidth: 1, padding: 10, marginBottom: 10, borderRadius: 5 },
+  container: { flex: 1, justifyContent: "center", paddingHorizontal: 20, backgroundColor: "#F5F5F5" },
+  card: {
+    padding: 20,
+    borderRadius: 10,
+    backgroundColor: "white",
+    elevation: 5,
+  },
+  title: { fontSize: 24, fontWeight: "bold", textAlign: "center", marginBottom: 20 },
+  input: { marginBottom: 15 },
+  loginButton: { marginTop: 10, backgroundColor: "#007BFF" },
 });
 
 export default LoginScreen;

@@ -129,12 +129,17 @@ const EmployeeDetailsScreen = () => {
           <Image
   source={
     displayedEmployee?.photo
-      ? { uri: `https://employeebackend-5qt6.onrender.com/${displayedEmployee?.photo}` }
+      ? { uri: displayedEmployee?.photo.startsWith("http") 
+          ? displayedEmployee.photo 
+          : `https://employeebackend-5qt6.onrender.com/${displayedEmployee.photo}`
+        }
       : defaultProfileImage
   }
   onError={(error) => console.log("Image Load Error:", error.nativeEvent)}
   style={styles.image}
 />
+
+
 
             <Text style={styles.idLabel}>ID: {displayedEmployee?.employeeId }</Text>
             <Text style={styles.idLabel}>FullName: {displayedEmployee?.FullName }</Text>
@@ -146,13 +151,13 @@ const EmployeeDetailsScreen = () => {
             <View style={styles.row}><Text style={styles.label}>Gender:</Text><Text style={styles.value}>{displayedEmployee?.gender || "N/A"}</Text></View>
             <View style={styles.row}><Text style={styles.label}>Phone:</Text><Text style={styles.value}>{displayedEmployee?.phone || "N/A"}</Text></View>
             <View style={styles.row}><Text style={styles.label}>Email:</Text><Text style={styles.value}>{displayedEmployee?.email || "N/A"}</Text></View>
-            <View style={styles.row}><Text style={styles.label}>Address:</Text><Text style={styles.value}>{displayedEmployee?.address || "N/A"}</Text></View>
+            <View style={styles.row}><Text style={styles.label}>Location:</Text><Text style={styles.value}>{displayedEmployee?.address || "N/A"}</Text></View>
           </View>
 
           <View style={styles.infoCard}>
             <Text style={styles.sectionTitle}>Employment Details</Text>
             <View style={styles.row}><Text style={styles.label}>Company Name:</Text><Text style={styles.value}>{displayedEmployee?.companyName || "N/A"}</Text></View>
-            <View style={styles.row}><Text style={styles.label}>Salary:</Text><Text style={styles.value}>{displayedEmployee?.salary ? `$${displayedEmployee.salary}` : "N/A"}</Text></View>
+  
           </View>
         </>
       )}
